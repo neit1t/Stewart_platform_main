@@ -25,8 +25,6 @@ class Stuart(sc.System_coordinate):
             _Stuart__lens = np.append(_Stuart__lens, mf.len_leg(self.coordinates_lower_platform[_Stuart__p],
                                               i))
 
-            _Stuart__p += 1
-
         self.len = _Stuart__lens
 
         self.test_lens = ((self.len > self.min_len) &
