@@ -15,9 +15,9 @@ class Check():
 
         if isinstance(array, list):
 
-            for i in array:
+            for number in array:
 
-                if Check._Check__checkNumbers(i) == i:
+                if Check._Check__checkNumbers(number) == number:
                     continue
                 else:
                     raise ValueError(
@@ -27,9 +27,9 @@ class Check():
 
         elif isinstance(array, np.ndarray):
 
-            for i in array:
+            for number in array:
 
-                if Check._Check__checkNumbers(i):
+                if Check._Check__checkNumbers(number):
                     continue
                 else:
                     raise ValueError(
@@ -57,5 +57,5 @@ class Check():
 
         else:
 
-            raise NameError(
+            raise KeyError(
                 'Неверное название платформы или системы координат')
