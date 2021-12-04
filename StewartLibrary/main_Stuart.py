@@ -147,6 +147,8 @@ class Stuart():
                                                                                   self.coordinates_lower_platform[-1],
                                                                                   self.coordinates_lower_platform[-1]))
 
+            _Stuart__p = _Stuart__p + 1
+
         self.angle_lens = _Stuart__angles.reshape(-1, 2)
 
         self.test_angle = ((self.angle_lens > self.min_angle) &
@@ -156,7 +158,7 @@ class Stuart():
 
         if test == True:
 
-            print(self.test_angle)
+            print(self.test_angle,_Stuart__p)
 
             return self.angle_lens
 
