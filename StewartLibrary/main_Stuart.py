@@ -28,7 +28,12 @@ class Stuart():
 
         self.angls_and_moovs_upper_platform = np.array([])
 
-    def coordinate_lower_platform(self, alfa, betta, gamma, x, y, z, R_lower):
+        print('Вы задали', f'Координаты глобальной системы:{coordinates_global}',
+         f'Минимальная и максимальная длинна ноги:{min_len,max_len}',
+              f'Минимальный и максимальный наклон ног:{min_angle,max_angle}',
+               sep='\n')
+
+    def coordinate_lower_platform(self, R_lower, alfa, betta, gamma, x, y, z):
 
         list(map(er.Check._Check__checkNumbers, [
              alfa, betta, gamma, x, y, z, R_lower]))
@@ -44,7 +49,7 @@ class Stuart():
         self.angls_and_moovs_lower_platform = np.append(
             self.angls_and_moovs_lower_platform, [alfa, betta, gamma, x, y, z])
 
-    def coordinate_upper_platform(self, alfa, betta, gamma, x, y, z, R_upper):
+    def coordinate_upper_platform(self, R_upper, alfa, betta, gamma, x, y, z):
 
         list(map(er.Check._Check__checkNumbers, [
              alfa, betta, gamma, x, y, z, R_upper]))
@@ -102,8 +107,11 @@ class Stuart():
 
         list(map(er.Check._Check__checkNumbers, [alfa, betta, gamma, x, y, z]))
 
-        new_coordinate = mf.calculation_new_coordinates(mf.transformation(
-            alfa, betta, gamma, x, y, z), self.coordinates_upper_platform)
+        self.__transform_matrix = mf.transformation(alfa, betta, gamma, x, y, z)
+
+        self.__inv_matrix = np.linalg.inv(self.__transform_matrix)
+
+        new_coordinate = mf.calculation_new_coordinates(self._Stuart__transform_matrix, self.coordinates_upper_platform)
 
         self.coordinates_upper_platform = new_coordinate.reshape(-1, 3)
 
@@ -158,7 +166,7 @@ class Stuart():
 
         if test == True:
 
-            print(self.test_angle,_Stuart__p)
+            print(self.test_angle)
 
             return self.angle_lens
 

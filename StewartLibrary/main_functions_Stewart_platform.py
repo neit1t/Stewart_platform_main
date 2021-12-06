@@ -65,7 +65,7 @@ def calculation_new_coordinates(Peremesh_Povorot, coordinates):
             new_coordinates = np.append(
                 new_coordinates, np.delete((Peremesh_Povorot@dob(coordinate)), -1))
 
-        return new_coordinates
+        return new_coordinates.reshape(-1,3)
 
     except ValueError:
 
