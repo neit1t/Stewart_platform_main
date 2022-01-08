@@ -7,11 +7,10 @@ import Errors as er
 
 class Stuart():
 
-    def __init__(self, coordinates_global, min_len, max_len, min_angle, max_angle):
+    def __init__(self, coordinates_global, min_len, max_len, angles):
         self.min_len = er.Check._Check__checkNumbers(min_len)
         self.max_len = er.Check._Check__checkNumbers(max_len)
-        self.min_angle = er.Check._Check__checkNumbers(min_angle)
-        self.max_angle = er.Check._Check__checkNumbers(max_angle)
+        self.angles = er.Check._Check__checkNumbers(angles)
         self.len = np.array([])
         self.test_lens = np.array([])
         self.test_angle = np.array([])
@@ -30,7 +29,7 @@ class Stuart():
 
         print('Вы задали', f'Координаты глобальной системы:{coordinates_global}',
          f'Минимальная и максимальная длинна ноги:{min_len,max_len}',
-              f'Минимальный и максимальный наклон ног:{min_angle,max_angle}',
+              f'Минимальный и максимальный наклон ног:{(90-self.angles),(90+self.angles)}',
                sep='\n')
 
     def coordinate_lower_platform(self, R_lower, alfa, betta, gamma, x, y, z):
@@ -159,8 +158,8 @@ class Stuart():
 
         self.angle_lens = _Stuart__angles.reshape(-1, 2)
 
-        self.test_angle = ((self.angle_lens > self.min_angle) &
-                           (self.angle_lens < self.max_angle))
+        self.test_angle = ((self.angle_lens > (90-self.angles)) &
+                           (self.angle_lens < (90+self.angles)))
 
         self.test_angle = self.test_angle.reshape(-1, 2)
 
