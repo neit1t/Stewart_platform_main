@@ -7,56 +7,63 @@ import Errors as er
 
 class Stuart():
 
-    def __init__(self, coordinates_global, min_len, max_len, min_angle, max_angle):
+    def __init__(self, coordinates_global, min_len, max_len, angles):
+        #Проверка минимальных,максимальных длинн и угла на число
         self.min_len = er.Check._Check__checkNumbers(min_len)
         self.max_len = er.Check._Check__checkNumbers(max_len)
-        self.min_angle = er.Check._Check__checkNumbers(min_angle)
-        self.max_angle = er.Check._Check__checkNumbers(max_angle)
+        self.angles = er.Check._Check__checkNumbers(angles)
+        #Создание массивов для длинн ног, а так же массивов для проверки по углам и ногам
         self.len = np.array([])
         self.test_lens = np.array([])
         self.test_angle = np.array([])
+        #Проверка массива по размерности должно быть (1,3)
         self.coordinates_global = er.Check._Check__checkShape(
             er.Check._Check__checkArrays(coordinates_global))
+        #Создание массива для хранения обратных матриц поворота и перемещения верхнего и нижнего основания
         self._Stuart__transformation_matrix_lower_platform = np.array([])
         self._Stuart__transformation_matrix_upper_platform = np  .array([])
-
+        #Создание матриц для хранения координат точек верхнего и нижнего основания
         self.coordinates_lower_platform = np.array([], dtype=np.float16)
 
         self.coordinates_upper_platform = np.array([], dtype=np.float16)
-
+        #Создание матриц, хранящих координаты и углы поворота основааний
         self.angls_and_moovs_lower_platform = np.array([])
 
         self.angls_and_moovs_upper_platform = np.array([])
 
         print('Вы задали', f'Координаты глобальной системы:{coordinates_global}',
          f'Минимальная и максимальная длинна ноги:{min_len,max_len}',
-              f'Минимальный и максимальный наклон ног:{min_angle,max_angle}',
+              f'Минимальный и максимальный наклон ног:{(90-self.angles),(90+self.angles)}',
                sep='\n')
 
     def coordinate_lower_platform(self, R_lower, alfa, betta, gamma, x, y, z):
-
+        #Функция для создания нижней платформы
+        #Проверка введенных перемещений,углов и радиуса на число
         list(map(er.Check._Check__checkNumbers, [
              alfa, betta, gamma, x, y, z, R_lower]))
+        #Создание обратной матрицы поворота и перемещения для нижнего основания
         self._Stuart__transformation_matrix_lower_platform = mf.transformation(
             alfa, betta, gamma, x, y, z)
-
+        #Расчет точек нижнего основания включая центр основания
         for angle_lower in np.pi*np.linspace(0, 360, 6, endpoint=False)/180:
 
             self.coordinates_lower_platform = np.append(self.coordinates_lower_platform,
                                                         mf.calculation_new_coordinates(self._Stuart__transformation_matrix_lower_platform, np.array([R_lower*np.cos(angle_lower), R_lower*np.sin(angle_lower), 0])))
         self.coordinates_lower_platform = np.append(self.coordinates_lower_platform,
                                                     mf.calculation_new_coordinates(self._Stuart__transformation_matrix_lower_platform, np.array([0, 0, 0]))).reshape(-1, 3)
+        #Сохранение координат и углов поворота нижнего основания
         self.angls_and_moovs_lower_platform = np.append(
             self.angls_and_moovs_lower_platform, [alfa, betta, gamma, x, y, z])
 
     def coordinate_upper_platform(self, R_upper, alfa, betta, gamma, x, y, z):
-
+        #Функция для создания верхней платформы
+        #Проверка введенных перемещений,углов и радиуса на число
         list(map(er.Check._Check__checkNumbers, [
              alfa, betta, gamma, x, y, z, R_upper]))
-
+        #Создание обратной матрицы поворота и перемещения для верхнего основания
         self._Stuart__transformation_matrix_upper_platform = mf.transformation(
             alfa, betta, gamma, x, y, z)
-
+        #Расчет точек верхней платформы в том числе координат центра
         for angle_upper in np.pi*np.linspace(30, 360+30, 6, endpoint=False)/180:
 
             self.coordinates_upper_platform = np.append(self.coordinates_upper_platform, mf.calculation_new_coordinates(
@@ -64,15 +71,17 @@ class Stuart():
 
         self.coordinates_upper_platform = np.append(self.coordinates_upper_platform,
                                                     mf.calculation_new_coordinates(self._Stuart__transformation_matrix_upper_platform, np.array([0, 0, 0]))).reshape(-1, 3)
+        #Сохранение перемещений и углов поворотов верхнего основания
         self.angls_and_moovs_upper_platform = np.append(
             self.angls_and_moovs_upper_platform, [alfa, betta, gamma, x, y, z])
 
     def coordinates_in_sistem(self, platform, system):
-
+        #Функция для вывода координат верхнего и нижнего основания в локальных и глобальных координатах
+        #Проверка введеных данных на соответствие
         er.Check._Check__checkNames(platform, system)
-
+        #Массив для хранения итоговых значений
         Itog = np.array([])
-
+        #
         if platform == 'lower':
 
             if system == 'global':
@@ -159,8 +168,8 @@ class Stuart():
 
         self.angle_lens = _Stuart__angles.reshape(-1, 2)
 
-        self.test_angle = ((self.angle_lens > self.min_angle) &
-                           (self.angle_lens < self.max_angle))
+        self.test_angle = ((self.angle_lens > (90-self.angles)) &
+                           (self.angle_lens < (90+self.angles)))
 
         self.test_angle = self.test_angle.reshape(-1, 2)
 

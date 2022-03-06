@@ -4,30 +4,33 @@ import numpy as np
 def rotx(alfa, matrix=np.eye(4)):
     # Функция принимает на вход угол поворота относительно Х, а так же необязательную матрицу. В итоге получаем матрицу поворота относительно Х
     # на угол alfa размерностью (4,4).
+    cos_sin = [np.cos((alfa/180)*np.pi),np.sin((alfa/180)*np.pi)]
     return np.dot(np.array([[1, 0, 0, 0],
-                            [0, np.cos((alfa/180)*np.pi), -
-                            np.sin((alfa/180)*np.pi), 0],
-                            [0, np.sin((alfa/180)*np.pi),
-                            np.cos((alfa/180)*np.pi), 0],
+                            [0, cos_sin[0], -
+                            cos_sin[1], 0],
+                            [0, cos_sin[1],
+                            cos_sin[0], 0],
                             [0, 0, 0, 1]]), matrix)
 
 
 def roty(betta, matrix=np.eye(4)):
     # Функция принимает на вход угол поворота относительно Y, а так же необязательную матрицу. В итоге получаем матрицу поворота относительно Y
     # на угол betta размерностью (4,4).
-    return np.dot(np.array([[np.cos((betta/180)*np.pi), 0, np.sin((betta/180)*np.pi), 0],
+    cos_sin = [np.cos((betta/180)*np.pi),np.sin((betta/180)*np.pi)]
+    return np.dot(np.array([[cos_sin[0], 0, cos_sin[1], 0],
                             [0, 1, 0, 0],
-                            [-np.sin((betta/180)*np.pi), 0,
-                            np.cos((betta/180)*np.pi), 0],
+                            [-cos_sin[1], 0,
+                            cos_sin[0], 0],
                             [0, 0, 0, 1]]), matrix)
 
 
 def rotz(gamma, matrix=np.eye(4)):
     # Функция принимает на вход угол поворота относительно Z, а так же необязательную матрицу. В итоге получаем матрицу поворота относительно Z
     # на угол gamma размерностью (4,4).
-    return np.dot(np.array([[np.cos((gamma/180)*np.pi), -np.sin((gamma/180)*np.pi), 0, 0],
-                            [np.sin((gamma/180)*np.pi),
-                            np.cos((gamma/180)*np.pi), 0, 0],
+    cos_sin = [np.cos((gamma/180)*np.pi),np.sin((gamma/180)*np.pi)]
+    return np.dot(np.array([[cos_sin[0], -cos_sin[1], 0, 0],
+                            [cos_sin[1],
+                            cos_sin[0], 0, 0],
                             [0, 0, 1, 0],
                             [0, 0, 0, 1]]), matrix)
 
