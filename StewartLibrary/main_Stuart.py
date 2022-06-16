@@ -7,7 +7,7 @@ import Errors as er
 
 class Stuart():
 
-    def __init__(self, coordinates_global, min_len, max_len, angles):
+    def __init__(self, coordinates_global:np.array, min_len:int or float, max_len:int or float, angles:int or float) -> None:
         #Проверка минимальных,максимальных длинн и угла на число
         self.min_len = er.Check._Check__checkNumbers(min_len)
         self.max_len = er.Check._Check__checkNumbers(max_len)
@@ -36,7 +36,7 @@ class Stuart():
               f'Минимальный и максимальный наклон ног:{(90-self.angles),(90+self.angles)}',
                sep='\n')
 
-    def coordinate_lower_platform(self, R_lower, alfa, betta, gamma, x, y, z):
+    def coordinate_lower_platform(self, R_lower:int or float, alfa:int or float, betta:int or float, gamma:int or float, x:int or float, y:int or float, z:int or float) -> None:
         #Функция для создания нижней платформы
         #Проверка введенных перемещений,углов и радиуса на число
         list(map(er.Check._Check__checkNumbers, [
@@ -55,7 +55,7 @@ class Stuart():
         self.angls_and_moovs_lower_platform = np.append(
             self.angls_and_moovs_lower_platform, [alfa, betta, gamma, x, y, z])
 
-    def coordinate_upper_platform(self, R_upper, alfa, betta, gamma, x, y, z):
+    def coordinate_upper_platform(self, R_upper:int or float, alfa:int or float, betta:int or float, gamma:int or float, x:int or float, y:int or float, z:int or float) -> None:
         #Функция для создания верхней платформы
         #Проверка введенных перемещений,углов и радиуса на число
         list(map(er.Check._Check__checkNumbers, [
@@ -75,7 +75,7 @@ class Stuart():
         self.angls_and_moovs_upper_platform = np.append(
             self.angls_and_moovs_upper_platform, [alfa, betta, gamma, x, y, z])
 
-    def coordinates_in_sistem(self, platform, system):
+    def coordinates_in_sistem(self, platform:str, system:str) -> np.array:
         #Функция для вывода координат верхнего и нижнего основания в локальных и глобальных координатах
         #Проверка введеных данных на соответствие
         er.Check._Check__checkNames(platform, system)
@@ -112,7 +112,7 @@ class Stuart():
 
                 return Itog.reshape(-1, 3)
 
-    def change_of_position_upper_platform(self, alfa, betta, gamma, x, y, z):
+    def change_of_position_upper_platform(self, alfa:int or float, betta:int or float, gamma:int or float, x:int or float, y:int or float, z:int or float) -> np.array:
 
         list(map(er.Check._Check__checkNumbers, [alfa, betta, gamma, x, y, z]))
 
@@ -129,7 +129,7 @@ class Stuart():
 
         return self.coordinates_upper_platform
 
-    def len_leg(self, test=False, _Stuart__p=0, __lens=np.array([])):
+    def len_leg(self, test=False, _Stuart__p=0, __lens=np.array([])) -> np.array:
 
         for coordinate_upper_leg in self.coordinates_upper_platform[:-1]:
 
@@ -155,7 +155,7 @@ class Stuart():
 
             raise KeyError('Только булевое значение')
 
-    def angle(self, test=False, _Stuart__p=0, _Stuart__angles=np.array([])):
+    def angle(self, test=False, _Stuart__p=0, _Stuart__angles=np.array([])) -> np.array:
 
         for coordinate_upper_leg in self.coordinates_upper_platform[:-1]:
 
