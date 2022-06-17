@@ -23,8 +23,6 @@ import matplotlib.pyplot as plt
 from torchviz import make_dot
 
 from sklearn.model_selection import train_test_split
-
-
 # Класс для выведения датасета как переменной
 class Model_Stuart():
 
@@ -106,32 +104,36 @@ class Model_Stuart():
                 return self.x,self.y
 
     def models(self) ->None:
-        X_train, X_test, y_train, y_test = train_test_split(self.x, self.y, test_size=0.33, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(self.x, self.y, test_size=0.23, random_state=242)
         self.X_train = torch.Tensor(X_train)
         self.y_train = torch.Tensor(y_train)
         self.X_test = torch.Tensor(X_test)
         self.y_test = torch.Tensor(y_test)
         self.network = nn.Sequential(
-            nn.Linear(12,36),
+            nn.Linear(12,16),
             nn.RReLU(),
-            nn.Linear(36,144),
+            nn.Linear(16,16),
+            nn.RReLU(),
+            nn.Linear(16,16),
+            nn.RReLU(),
+            nn.Linear(16, 16),
             nn.ReLU(),
-            nn.Linear(144, 36),
-            nn.RReLU(),
-            nn.Linear(36, 18),
-            nn.RReLU(),
-            nn.Linear(18, 6)
+            nn.Linear(16, 6),
         )
-        self.optimizer = torch.optim.Adam(self.network.parameters())
+        self.Lr = 1e-2
         self.losses = []
         self.interation = 0
 
     def load_dataset(self,X:str, Y:str) ->None:
         self.x = pd.read_excel(f'{X}',index_col = 0).to_numpy()
         self.y = pd.read_excel(f'{Y}', index_col = 0).to_numpy()
+
+    def set_lr(self,Lr:int or float) ->None:
+        self.Lr = Lr
         
     def train_model(self,epoh: int,iter: int,plots = True):
         self.interation += epoh*iter
+        self.optimizer = torch.optim.Adam(self.network.parameters())
         for i in range(epoh):
             for j in tqdm(range(iter)):
                 y_pred = self.network(self.X_train)
@@ -146,11 +148,17 @@ class Model_Stuart():
     def model_predict(self,data:np.array) -> torch.tensor:
         return self.network(torch.Tensor(data))
 
-    def plot_results(self,N_leg,N):
-        plt.title('Граффик сравнения исходной функции и ее апроксимация нейронной сетью')
-        plt.plot([self.network(i).detach().numpy()[N_leg-1] for i in self.X_test[:N]],label = 'Нейронная сеть')
-        plt.plot([i.detach().numpy()[N_leg-1] for i in self.y_test[:N]], label = 'Исходная функция')
-        plt.legend()
+    def plot_results1(self,N):
+        plt.figure(figsize=(36, 16))
+        lol = [i for i in range(231,237)]
+        for i in range(6):
+            plt.subplot(lol[i])
+            plt.xlabel('Количество наблюдений', fontsize=12, color='black')
+            plt.ylabel('См', fontsize=12, color='black')
+            plt.title(f'Граффик сравнения исходной функции и ее апроксимация нейронной сетью\n{i+1} нога')
+            plt.plot([self.network(ie).detach().numpy()[i] for ie in self.X_test[:N]],label = 'Нейронная сеть')
+            plt.plot([ie.detach().numpy()[i] for ie in self.y_test[:N]], label = 'Исходная функция')
+            plt.legend()
 
     def plot_model(self):
         return make_dot(self.network(self.X_test[0]).mean(), params=dict(self.network.named_parameters()))
